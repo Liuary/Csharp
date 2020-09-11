@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace NameGenerate
+namespace NameManage
 {
 
     // 姓名管理器
-    class NameManage
+    public class NameManage
     {
         // 姓
         private String _Surname;
@@ -55,14 +55,23 @@ namespace NameGenerate
 
     }
 
-    // 姓名生成器
-    class NameGenerate
+    // 姓名生成器，当返回值始终为张三时，请查看异常信息ErrorMessage
+    public class NameGenerate
     {
         // 随机数生成工具
         Random RandTool;
 
         // 存储文档中的姓和名
         String[][] NameReadArray;
+
+        // 存储是否成功以及错误信息
+        bool IsSuccess;
+        String _ErrorMessage;
+
+        public String ErrorMessage
+        {
+            get { return _ErrorMessage; }
+        }
 
         // 构造函数，可以调整文档的路径
         public NameGenerate(
@@ -86,7 +95,19 @@ namespace NameGenerate
             for (int i = 0; i < 2; i++)
             {
                 // 读取文件的工具
-                StreamReader FileRead = new StreamReader(FilePathArray[i], Encoding.Default);
+                StreamReader FileRead;
+                try
+                {
+                    FileRead = new StreamReader(FilePathArray[i], Encoding.Default);
+                }
+                catch (Exception e)
+                {
+                    IsSuccess = false;
+                    _ErrorMessage = "生成器出现问题，可能是没有把资源文件放在正确的目录，参考下述异常信息：\n";
+                    _ErrorMessage += e.Message;
+                    return;
+                }
+                
                 String line;
                 String Context = "";
                 while ((line = FileRead.ReadLine()) != null)
@@ -95,12 +116,18 @@ namespace NameGenerate
                 }
                 NameReadArray[i] = Context.Split(" ");
             }
-
+            IsSuccess = true;
         }
 
         // 获取一个随机的姓名, 参数表示名字的长度（名字长度不是姓名的长度）
         public NameManage GetRandName(int NameLength = -1)
         {
+
+            if (!IsSuccess)
+            {
+                return new NameManage("张", "三");
+            }
+
             if (NameLength.Equals(-1))
             {
                 NameLength = RandTool.Next(1, 3);
