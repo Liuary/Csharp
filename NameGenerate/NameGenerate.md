@@ -21,4 +21,4 @@ Console.WriteLine(N.GetRandName());
 
     - 用来生成汉语姓名
     
-读取的文件位于本项目根目录下的 Resource/Data/NameManage 文件夹中，用户可以在生成器的构造函数中指定路径。
+读取的文件位于本项目根目录下的 [Resource/Data/NameManage](https://github.com/Liuary/GameBuildTools/tree/master/Resource/Data/NameManage) 文件夹中，用户可以在生成器的构造函数中指定路径。
